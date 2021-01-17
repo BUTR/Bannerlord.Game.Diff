@@ -126,15 +126,6 @@ foreach ($key in $mappings.Keys) {
         $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
-        if ([string]::IsNullOrEmpty($old_folder)) {
-            Write-Host "old_folder was not found!";
-            continue;	
-        }
-        if ([string]::IsNullOrEmpty($new_folder)) {
-            Write-Host "new_folder was not found!";
-            continue;	
-        }
-
         Write-Output  "Generating for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
@@ -159,15 +150,6 @@ foreach ($key in $mappings.Keys) {
         $html_folder = $([IO.Path]::Combine($html, $mapping));
         $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
-
-        if ([string]::IsNullOrEmpty($old_folder)) {
-            Write-Host "old_folder was not found!";
-            continue;	
-        }
-        if ([string]::IsNullOrEmpty($new_folder)) {
-            Write-Host "new_folder was not found!";
-            continue;	
-        }
 
         Write-Output  "Generating for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
