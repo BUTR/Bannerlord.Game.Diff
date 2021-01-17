@@ -66,11 +66,11 @@ foreach ($key in $mappings.Keys) {
 
 
     # generate source code based on the Public API
-    Write-Output  "Generating Stable source code..."
+    Write-Output  "Generating Stable source code...";
     foreach ($file in $old_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
 
-        $old_folder  = [IO.Path]::Combine($old, $mapping), $fileWE);
+        $old_folder  = [IO.Path]::Combine($old, $mapping, $fileWE);
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
