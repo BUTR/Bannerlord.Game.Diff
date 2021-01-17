@@ -9,11 +9,11 @@ if ([string]::IsNullOrEmpty($new_version_folder)) {
     exit;
 }
 
-Write-Output  "Installing tools..."
+Write-Output "Installing tools..."
 dotnet tool install ilspycmd -g;
 npm install -g diff2html-cli;
 
-Write-Output  "Started..."
+Write-Output "Started..."
 $mappings = @{};
 $mappings.Add('bannerlord.referenceassemblies.core.earlyaccess', 'Core');
 $mappings.Add('bannerlord.referenceassemblies.native.earlyaccess', 'Native');
@@ -35,9 +35,6 @@ New-Item -ItemType directory -Path $html -Force | Out-Null;
 $old_folders = Get-ChildItem -Path $old_version_folder | Sort-Object -desc;
 $new_folders = Get-ChildItem -Path $new_version_folder | Sort-Object -desc;
 
-$old_main_bin_path = [IO.Path]::Combine($old_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
-$new_main_bin_path = [IO.Path]::Combine($new_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
-
 foreach ($key in $mappings.Keys) {
     $mapping = $mappings[$key];
     Write-Output "Handling $mapping..."
@@ -57,57 +54,50 @@ foreach ($key in $mappings.Keys) {
 
 
     # generate source code based on the Public API
-    Write-Output  "Generating Stable source code...";
+    Write-Output "Generating Stable source code...";
     foreach ($file in $old_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-
         $old_folder  = [IO.Path]::Combine($old, $mapping, $fileWE);
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
-        Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" --referencepath "$old_main_bin_path" | Out-Null;
+        Write-Output "Generating for $fileWE...";
+        ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" | Out-Null;
     }
     Write-Output  "Generating Beta source code..."
     foreach ($file in $new_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-
         $new_folder  = [IO.Path]::Combine($new, $mapping, $fileWE);
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
-        Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" --referencepath "$new_main_bin_path" | Out-Null;
+        Write-Output "Generating for $fileWE...";
+        ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" | Out-Null;
     }
 
 
     # delete csproj files
     Write-Output  "Deleting csproj's..."
     foreach ($file in $old_files) {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-        
-        $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
+        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);    
+        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
+        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
         Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
         Get-ChildItem -Path $($new_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
     }
     foreach ($file in $new_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-        
-        $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
+        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
+        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
         Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
         Get-ChildItem -Path $($new_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
     }
 
 
     # generate the diff, md and html files
-    Write-Output  "Generating diff's..."
+    Write-Output "Generating diff's..."
     foreach ($file in $old_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-
-        $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
-        New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
-        New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
+        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
+        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
 
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
@@ -126,11 +116,8 @@ foreach ($key in $mappings.Keys) {
     }
     foreach ($file in $new_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-
-        $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
-        New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
-        New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
+        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
+        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
 
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
@@ -140,7 +127,7 @@ foreach ($key in $mappings.Keys) {
         $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
-        Write-Output  "Generating diff for $fileWE...";
+        Write-Output "Generating diff for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
             Write-Output "Generating html for $diff_file...";
