@@ -109,10 +109,10 @@ foreach ($key in $mappings.Keys) {
 
         Write-Output "Generating diff for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
-        #if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
-        #    Write-Output "Generating html for $diff_file...";
+        if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
+            Write-Output "Generating html for $diff_file...";
             diff2html -i file -- $diff_file -F $html_file;
-        #}
+        }
     }
     foreach ($file in $new_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
@@ -129,9 +129,9 @@ foreach ($key in $mappings.Keys) {
 
         Write-Output "Generating diff for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
-        #if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
-        #    Write-Output "Generating html for $diff_file...";
+        if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
+            Write-Output "Generating html for $diff_file...";
             diff2html -i file -- $diff_file -F $html_file;
-        #}
+        }
     }
 }
