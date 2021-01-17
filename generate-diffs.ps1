@@ -90,7 +90,7 @@ foreach ($key in $mappings.Keys) {
         Write-Output  "Generating for $fileWE...";
         try
         {
-            ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path);";
+            ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)";
         }
         catch [System.BadImageFormatException] { }
     }
