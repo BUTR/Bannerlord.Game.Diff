@@ -71,7 +71,7 @@ foreach ($key in $mappings.Keys) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
         $old_folder  = [IO.Path]::Combine($($using:old), $($using:mapping), $fileWE);
-        New-Item -ItemType directory -Path $old_folder -ErrorAction SilentlyContinue -Force | Out-Null;
+        New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
         ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)";
@@ -81,10 +81,10 @@ foreach ($key in $mappings.Keys) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
         $new_folder  = [IO.Path]::Combine($($using:new), $($using:mapping), $fileWE);
-        New-Item -ItemType directory -Path $new_folder -Force -ErrorAction SilentlyContinue | Out-Null;
+        New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path);";
+        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)";
     }
 
 
