@@ -74,11 +74,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        try
-        {
-            ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)";
-        }
-        catch { }
+        ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)" | Out-Null;
     }
     Write-Output  "Generating Beta source code..."
     $new_files | ForEach-Object -Parallel {
@@ -88,11 +84,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        try
-        {
-            ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)";
-        }
-        catch { }
+        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)" | Out-Null;
     }
 
 
