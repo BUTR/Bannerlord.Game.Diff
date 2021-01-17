@@ -67,24 +67,24 @@ foreach ($key in $mappings.Keys) {
 
     # generate source code based on the Public API
     Write-Output  "Generating Stable source code..."
-    $old_files | ForEach-Object -Parallel {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
+    foreach ($file in $old_files) {
+        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
 
         $old_folder  = [IO.Path]::Combine($($using:old), $($using:mapping), $fileWE);
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)" | Out-Null;
+        ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)" | Out-Null;
     }
     Write-Output  "Generating Beta source code..."
-    $new_files | ForEach-Object -Parallel {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
+    foreach ($file in $new_files) {
+        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
 
         $new_folder  = [IO.Path]::Combine($($using:new), $($using:mapping), $fileWE);
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)" | Out-Null;
+        ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)" | Out-Null;
     }
 
 
