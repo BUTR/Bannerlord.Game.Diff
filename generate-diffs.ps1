@@ -28,41 +28,32 @@ $excludes = @(
 $old  = [IO.Path]::Combine($(Get-Location), "temp", "old" );
 $new  = [IO.Path]::Combine($(Get-Location), "temp", "new" );
 $diff = [IO.Path]::Combine($(Get-Location), "temp", "diff");
-$md   = [IO.Path]::Combine($(Get-Location), "temp", "md"  );
 $html = [IO.Path]::Combine($(Get-Location), "temp", "html");
 New-Item -ItemType directory -Path $diff -Force | Out-Null;
-New-Item -ItemType directory -Path $md -Force | Out-Null;
 New-Item -ItemType directory -Path $html -Force | Out-Null;
 
-$old_folders = Get-ChildItem -Path $old_version_folder;
-$new_folders = Get-ChildItem -Path $new_version_folder;
+$old_folders = Get-ChildItem -Path $old_version_folder | Sort -desc;
+$new_folders = Get-ChildItem -Path $new_version_folder | Sort -desc;
 
 $old_main_bin_path = [IO.Path]::Combine($old_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
 $new_main_bin_path = [IO.Path]::Combine($new_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
 
-$i = 0;
 foreach ($key in $mappings.Keys) {
-    $i++;
     $mapping = $mappings[$key];
-    $old_folder1 = $old_folders[$i - 1];
-    $new_folder1 = $new_folders[$i - 1];
+	Write-Output  "Handling $mapping..."
+	
+    $old_path = [IO.Path]::Combine($old_version_folder, $key);
+    $new_path = [IO.Path]::Combine($new_version_folder, $key);
+	if (!(Test-Path "$old_path")) { continue; }
+	if (!(Test-Path "$new_path")) { continue; }
 
-    if ([string]::IsNullOrEmpty($old_folder1)) {
-        Write-Host "old_folder1 was not found!";
-        continue;
-    }
-    if ([string]::IsNullOrEmpty($new_folder1)) {
-        Write-Host "new_folder1 was not found!";
-        continue;
-    }
+	$contains = $false;
+	foreach ($of in $old_folders) { if ([IO.Path]::GetFileName($of) -eq $key) { $contains = $true; } }
+	foreach ($nf in $new_folders) { if ([IO.Path]::GetFileName($nf) -eq $key) { $contains = $true;} }
+	if (!$contains) { continue; }
 
-    Write-Output  "Handling $mapping..."
-
-    $old_path = [IO.Path]::Combine($old_version_folder, $old_folder1);
-    $new_path = [IO.Path]::Combine($new_version_folder, $new_folder1);
-
-    $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes;
-    $new_files = Get-ChildItem -Path $($new_path + '/*.dll') -Recurse -Exclude $excludes;
+    $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort -desc;
+    $new_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort -desc;
 
 
     # generate source code based on the Public API
@@ -92,6 +83,7 @@ foreach ($key in $mappings.Keys) {
     Write-Output  "Deleting csproj's..."
     foreach ($file in $old_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
+		
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
         Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
@@ -99,6 +91,7 @@ foreach ($key in $mappings.Keys) {
     }
     foreach ($file in $new_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
+		
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
         Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
@@ -113,7 +106,6 @@ foreach ($key in $mappings.Keys) {
 
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
-
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
@@ -134,7 +126,6 @@ foreach ($key in $mappings.Keys) {
 
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
-
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
@@ -150,6 +141,4 @@ foreach ($key in $mappings.Keys) {
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) { diff2html -i file -- $diff_file -F $html_file; }
     }
-
-    $i++;
 }
