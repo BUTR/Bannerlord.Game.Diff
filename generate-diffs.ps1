@@ -44,22 +44,22 @@ $i = 0;
 foreach ($key in $mappings.Keys) {
     $i++;
     $mapping = $mappings[$key];
-    $old_folder = $old_folders[$i - 1];
-    $new_folder = $new_folders[$i - 1];
+    $old_folder1 = $old_folders[$i - 1];
+    $new_folder1 = $new_folders[$i - 1];
 
-    if ([string]::IsNullOrEmpty($old_folder)) {
-        Write-Host "old_folder was not found!";
+    if ([string]::IsNullOrEmpty($old_folder1)) {
+        Write-Host "old_folder1 was not found!";
         continue;	
     }
-    if ([string]::IsNullOrEmpty($new_folder)) {
-        Write-Host "old_folder was not found!";
+    if ([string]::IsNullOrEmpty($new_folder1)) {
+        Write-Host "new_folder1 was not found!";
         continue;	
     }
 
     Write-Output  "Handling $mapping..."
 
-    $old_path = [IO.Path]::Combine($old_version_folder, $old_folder);
-    $new_path = [IO.Path]::Combine($new_version_folder, $new_folder);
+    $old_path = [IO.Path]::Combine($old_version_folder, $old_folder1);
+    $new_path = [IO.Path]::Combine($new_version_folder, $new_folder1);
 
     $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes;
     $new_files = Get-ChildItem -Path $($new_path + '/*.dll') -Recurse -Exclude $excludes;
@@ -126,6 +126,15 @@ foreach ($key in $mappings.Keys) {
         $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
+        if ([string]::IsNullOrEmpty($old_folder)) {
+            Write-Host "old_folder was not found!";
+            continue;	
+        }
+        if ([string]::IsNullOrEmpty($new_folder)) {
+            Write-Host "new_folder was not found!";
+            continue;	
+        }
+
         Write-Output  "Generating for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         New-Item -ItemType file -Path $md_file -Value $("$template" -f $(Get-Content -Path $diff_file -Raw)) -Force | Out-Null;
@@ -148,6 +157,15 @@ foreach ($key in $mappings.Keys) {
         $html_folder = $([IO.Path]::Combine($html, $mapping));
         $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
+
+        if ([string]::IsNullOrEmpty($old_folder)) {
+            Write-Host "old_folder was not found!";
+            continue;	
+        }
+        if ([string]::IsNullOrEmpty($new_folder)) {
+            Write-Host "new_folder was not found!";
+            continue;	
+        }
 
         Write-Output  "Generating for $fileWE...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
