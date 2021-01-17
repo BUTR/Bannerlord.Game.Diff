@@ -10,7 +10,7 @@ if ([string]::IsNullOrEmpty($new_version_folder)) {
 }
 
 Write-Output "Installing tools...";
-dotnet tool install ilspycmd -g;
+dotnet tool install --global ilspycmd --version 7.0.0.6291-preview2;
 npm install -g diff2html-cli;
 
 Write-Output "Started...";
@@ -50,7 +50,7 @@ foreach ($key in $mappings.Keys) {
     if (!$contains) { continue; }
 
     $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort-Object -desc;
-    $new_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort-Object -desc;
+    $new_files = Get-ChildItem -Path $($new_path + '/*.dll') -Recurse -Exclude $excludes | Sort-Object -desc;
 
 
     # generate source code based on the Public API
