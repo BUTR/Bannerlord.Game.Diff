@@ -98,6 +98,10 @@ foreach ($key in $mappings.Keys) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
         $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
+        if (!(Test-Path "$old_folder")) { continue; }
+        if (!(Test-Path "$new_folder")) { continue; }
+        #New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
+        #New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
@@ -118,6 +122,10 @@ foreach ($key in $mappings.Keys) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
         $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
+        if (!(Test-Path "$old_folder")) { continue; }
+        if (!(Test-Path "$new_folder")) { continue; }
+        #New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
+        #New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
