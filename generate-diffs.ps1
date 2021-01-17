@@ -32,8 +32,8 @@ $html = [IO.Path]::Combine($(Get-Location), "temp", "html");
 New-Item -ItemType directory -Path $diff -Force | Out-Null;
 New-Item -ItemType directory -Path $html -Force | Out-Null;
 
-$old_folders = Get-ChildItem -Path $old_version_folder | Sort -desc;
-$new_folders = Get-ChildItem -Path $new_version_folder | Sort -desc;
+$old_folders = Get-ChildItem -Path $old_version_folder | Sort-Object -desc;
+$new_folders = Get-ChildItem -Path $new_version_folder | Sort-Object -desc;
 
 $old_main_bin_path = [IO.Path]::Combine($old_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
 $new_main_bin_path = [IO.Path]::Combine($new_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
@@ -52,8 +52,8 @@ foreach ($key in $mappings.Keys) {
 	foreach ($nf in $new_folders) { if ([IO.Path]::GetFileName($nf) -eq $key) { $contains = $true;} }
 	if (!$contains) { continue; }
 
-    $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort -desc;
-    $new_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort -desc;
+    $old_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort-Object -desc;
+    $new_files = Get-ChildItem -Path $($old_path + '/*.dll') -Recurse -Exclude $excludes | Sort-Object -desc;
 
 
     # generate source code based on the Public API
