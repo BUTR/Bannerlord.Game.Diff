@@ -1,12 +1,12 @@
 param ($old_version_folder, $new_version_folder);
 
 if ([string]::IsNullOrEmpty($old_version_folder)) {
-	Write-Host "old_version_folder was not provided! Exiting...";
-	exit;	
+    Write-Host "old_version_folder was not provided! Exiting...";
+    exit;	
 }
 if ([string]::IsNullOrEmpty($new_version_folder)) {
-	Write-Host "new_version_folder was not provided! Exiting...";
-	exit;	
+    Write-Host "new_version_folder was not provided! Exiting...";
+    exit;	
 }
 
 Write-Output  "Installing tools..."
@@ -46,18 +46,18 @@ foreach ($key in $mappings.Keys) {
     $mapping = $mappings[$key];
     $old_folder = $old_folders[$i - 1];
     $new_folder = $new_folders[$i - 1];
-	
-	if ([string]::IsNullOrEmpty($old_folder)) {
-	    Write-Host "old_folder was not found!";
-	    continue;	
+
+    if ([string]::IsNullOrEmpty($old_folder)) {
+        Write-Host "old_folder was not found!";
+        continue;	
     }
-	if ([string]::IsNullOrEmpty($new_folder)) {
-	    Write-Host "old_folder was not found!";
-	    continue;	
+    if ([string]::IsNullOrEmpty($new_folder)) {
+        Write-Host "old_folder was not found!";
+        continue;	
     }
-	
+
     Write-Output  "Handling $mapping..."
-	
+
     $old_path = [IO.Path]::Combine($old_version_folder, $old_folder);
     $new_path = [IO.Path]::Combine($new_version_folder, $new_folder);
 
@@ -66,7 +66,7 @@ foreach ($key in $mappings.Keys) {
 
 
     # generate source code based on the Public API
-	Write-Output  "Generating Stable source code..."
+    Write-Output  "Generating Stable source code..."
     $old_files | ForEach-Object -Parallel {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
@@ -74,9 +74,9 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)";
+        ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)" -ErrorAction Continue ;
     }
-	Write-Output  "Generating Beta source code..."
+    Write-Output  "Generating Beta source code..."
     $new_files | ForEach-Object -Parallel {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
@@ -84,7 +84,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)";
+        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:new_main_bin_path)" -ErrorAction Continue ;
     }
 
 
@@ -106,8 +106,8 @@ foreach ($key in $mappings.Keys) {
     }
 
 
-	# generate the diff, md and html files
-	Write-Output  "Generating diff's..."
+    # generate the diff, md and html files
+    Write-Output  "Generating diff's..."
     foreach ($file in $old_files) {
         $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
 
@@ -154,6 +154,6 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType file -Path $md_file -Value $("$template" -f $(Get-Content -Path $diff_file -Raw)) -Force | Out-Null;
         diff2html -i file -- $diff_file -F $html_file;
     }
-	
-	$i++;
+
+    $i++;
 }
