@@ -1,0 +1,73 @@
+name: Workflow
+
+on:
+  push:
+    branches: [ master ]
+  repository_dispatch:
+    types:
+      # If a new version of the game is released
+      - game_version_update
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending .NET CLI telemetry to Microsoft.
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  generate:
+    name: Workflow
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Setup BUTR GPR
+      uses: actions/setup-dotnet@master
+      with:
+        source-url: https://nuget.pkg.github.com/BUTR/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+
+    - name: Download latest ref packages
+      run: >-
+          $stable_version=$env:STABLE_VERSION;
+          $stable_version=$stable_version.substring(1);
+          $beta_version=$env:BETA_VERSION;
+          $beta_version=$beta_version.substring(1);
+          dotnet run -p build/PackageDownloader -- `
+            -s $stable_version -b $beta_version -n Bannerlord.ReferenceAssemblies `
+            -t $PWD `
+            -f https://nuget.pkg.github.com/BUTR/index.json -u Aragas -p ${{secrets.GITHUB_TOKEN}}
+      shell: pwsh
+      env:
+        STABLE_VERSION: ${{secrets.SYNCED_GAME_STABLE_VERSION}}
+        BETA_VERSION: ${{secrets.SYNCED_GAME_BETA_VERSION}}
+
+    - name: Generate Diffs
+      run: ./generate-diffs.ps1 -old_version_folder "./Stable" -new_version_folder "./Beta"
+      shell: pwsh
+
+    - name: Deploy DocFX
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: temp/md
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
