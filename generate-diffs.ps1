@@ -40,14 +40,24 @@ $new_folders = Get-ChildItem -Path $new_version_folder;
 $old_main_bin_path = [IO.Path]::Combine($old_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
 $new_main_bin_path = [IO.Path]::Combine($new_version_folder, 'bannerlord.referenceassemblies.core.earlyaccess');
 
-#for ($i = 0; $i -lt $mappings.Length; $i++) {
 $i = 0;
 foreach ($key in $mappings.Keys) {
+    $i++;
     $mapping = $mappings[$key];
-    $old_folder = $old_folders[$i];
-    $new_folder = $new_folders[$i];
-	Write-Output  "Handling $mapping..."
-
+    $old_folder = $old_folders[$i - 1];
+    $new_folder = $new_folders[$i - 1];
+	
+	if ([string]::IsNullOrEmpty($old_folder)) {
+	    Write-Host "old_folder was not found!";
+	    continue;	
+    }
+	if ([string]::IsNullOrEmpty($new_folder)) {
+	    Write-Host "old_folder was not found!";
+	    continue;	
+    }
+	
+    Write-Output  "Handling $mapping..."
+	
     $old_path = [IO.Path]::Combine($old_version_folder, $old_folder);
     $new_path = [IO.Path]::Combine($new_version_folder, $new_folder);
 
@@ -57,24 +67,24 @@ foreach ($key in $mappings.Keys) {
 
     # generate source code based on the Public API
 	Write-Output  "Generating Stable source code..."
-    foreach ($file in $old_files) {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
+    $old_files | ForEach-Object -Parallel {
+        $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
-        $old_folder  = [IO.Path]::Combine("$old", $mapping,  $fileWE);
+        $old_folder  = [IO.Path]::Combine($($using:old), $($using:mapping), $fileWE);
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" --referencepath "$old_main_bin_path";
+        ilspycmd "$($_.FullName)" --project --outputdir "$old_folder" --referencepath "$($using:old_main_bin_path)";
     }
 	Write-Output  "Generating Beta source code..."
-    foreach ($file in $new_files) {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
+    $new_files | ForEach-Object -Parallel {
+        $fileWE = [IO.Path]::GetFileNameWithoutExtension($_);
 
-        $new_folder  = [IO.Path]::Combine("$new", $mapping,  $fileWE);
+        $new_folder  = [IO.Path]::Combine($($using:new), $($using:mapping), $fileWE);
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output  "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" --referencepath "$new_main_bin_path";
+        ilspycmd "$($_.FullName)" --project --outputdir "$new_folder" --referencepath "$($using:old_main_bin_path);";
     }
 
 
