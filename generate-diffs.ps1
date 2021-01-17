@@ -29,6 +29,7 @@ $old  = [IO.Path]::Combine($(Get-Location), "temp", "old" );
 $new  = [IO.Path]::Combine($(Get-Location), "temp", "new" );
 $diff = [IO.Path]::Combine($(Get-Location), "temp", "diff");
 $html = [IO.Path]::Combine($(Get-Location), "temp", "html");
+$html2 = [IO.Path]::Combine($(Get-Location), "temp", "html2");
 New-Item -ItemType directory -Path $diff -Force | Out-Null;
 New-Item -ItemType directory -Path $html -Force | Out-Null;
 
@@ -142,4 +143,6 @@ foreach ($key in $mappings.Keys) {
             diff2html -i file -- $diff_file -F $html_file;
         }
     }
+	
+	Move-Item -Path "$html" -Destination "$html2"
 }
