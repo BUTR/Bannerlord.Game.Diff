@@ -114,11 +114,11 @@ foreach ($key in $mappings.Keys) {
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
 
-        if ([string]::IsNullOrEmpty($old_folder)) {
+        if (![System.IO.File]::Exists($old_folder)) {
             Write-Host "old_folder was not found!";
             continue;	
         }
-        if ([string]::IsNullOrEmpty($new_folder)) {
+        if (![System.IO.File]::Exists($new_folder)) {
             Write-Host "new_folder was not found!";
             continue;	
         }
@@ -145,11 +145,11 @@ foreach ($key in $mappings.Keys) {
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
 
-        if ([string]::IsNullOrEmpty($old_folder)) {
+        if (![System.IO.File]::Exists($old_folder)) {
             Write-Host "old_folder was not found!";
             continue;	
         }
-        if ([string]::IsNullOrEmpty($new_folder)) {
+        if (![System.IO.File]::Exists($new_folder)) {
             Write-Host "new_folder was not found!";
             continue;	
         }
