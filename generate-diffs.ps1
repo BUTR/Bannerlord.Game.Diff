@@ -114,6 +114,15 @@ foreach ($key in $mappings.Keys) {
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
 
+        if ([string]::IsNullOrEmpty($old_folder)) {
+            Write-Host "old_folder was not found!";
+            continue;	
+        }
+        if ([string]::IsNullOrEmpty($new_folder)) {
+            Write-Host "new_folder was not found!";
+            continue;	
+        }
+
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
         New-Item -ItemType directory -Path $diff_folder -Force | Out-Null;
@@ -135,6 +144,15 @@ foreach ($key in $mappings.Keys) {
 
         $old_folder = [IO.Path]::Combine($(Get-Location), "temp", "old", $mapping, $fileWE);
         $new_folder = [IO.Path]::Combine($(Get-Location), "temp", "new", $mapping, $fileWE);
+
+        if ([string]::IsNullOrEmpty($old_folder)) {
+            Write-Host "old_folder was not found!";
+            continue;	
+        }
+        if ([string]::IsNullOrEmpty($new_folder)) {
+            Write-Host "new_folder was not found!";
+            continue;	
+        }
 
         $diff_folder = $([IO.Path]::Combine($diff, $mapping));
         $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
