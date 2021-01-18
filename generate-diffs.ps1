@@ -112,10 +112,10 @@ foreach ($key in $mappings.Keys) {
         $html_file = [IO.Path]::Combine($diff_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
-        Write-Output "Generating diff for $fileWE...";
+        Write-Output "Generating diff as $diff_file...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
-            Write-Output "Generating html for $diff_file...";
+            Write-Output "Generating html as $html_file...";
             diff2html -i file -- $diff_file -F $html_file;
         }
     }
@@ -136,10 +136,10 @@ foreach ($key in $mappings.Keys) {
         $html_file = [IO.Path]::Combine($diff_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
-        Write-Output "Generating diff for $fileWE...";
+        Write-Output "Generating diff as $diff_file...";
         git diff --no-index "$old_folder" "$new_folder" --output $diff_file;
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
-            Write-Output "Generating html for $diff_file...";
+            Write-Output "Generating html as $html_file...";
             diff2html -i file -- $diff_file -F $html_file;
         }
     }
