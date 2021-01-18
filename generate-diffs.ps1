@@ -145,5 +145,9 @@ foreach ($key in $mappings.Keys) {
     }
 	
 	#Move-Item -Path "$diff" -Destination "$html2";
-	Move-Item -Path "$html" -Destination "$diff";
+	#Move-Item -Path "$html" -Destination "$diff";
+	Write-Output "$...diff";
+	Get-ChildItem "$diff" –Recursive;
+	Write-Output "$...html";
+	Get-ChildItem "$html" –Recursive;
 }
