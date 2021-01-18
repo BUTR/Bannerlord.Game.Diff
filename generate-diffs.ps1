@@ -104,12 +104,12 @@ foreach ($key in $mappings.Keys) {
         #New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
         #New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
-        $diff_folder = $([IO.Path]::Combine($diff, $mapping));
-        $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
+        $diff_folder = [IO.Path]::Combine($diff, $mapping);
+        $diff_file = [IO.Path]::Combine($diff_folder, $fileWE + '.diff');
         New-Item -ItemType directory -Path $diff_folder -Force | Out-Null;
 
-        $html_folder = $([IO.Path]::Combine($html, $mapping));
-        $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
+        $html_folder = [IO.Path]::Combine($html, $mapping);
+        $html_file = [IO.Path]::Combine($diff_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
         Write-Output "Generating diff for $fileWE...";
@@ -128,12 +128,12 @@ foreach ($key in $mappings.Keys) {
         #New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
         #New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
-        $diff_folder = $([IO.Path]::Combine($diff, $mapping));
-        $diff_file = $([IO.Path]::Combine($diff_folder, $fileWE + '.diff'));
+        $diff_folder = [IO.Path]::Combine($diff, $mapping);
+        $diff_file = [IO.Path]::Combine($diff_folder, $fileWE + '.diff');
         New-Item -ItemType directory -Path $diff_folder -Force | Out-Null;
 
-        $html_folder = $([IO.Path]::Combine($html, $mapping));
-        $html_file = $([IO.Path]::Combine($html_folder, $fileWE + '.html'));
+        $html_folder = [IO.Path]::Combine($html, $mapping);
+        $html_file = [IO.Path]::Combine($diff_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path $html_folder -Force | Out-Null;
 
         Write-Output "Generating diff for $fileWE...";
@@ -146,8 +146,8 @@ foreach ($key in $mappings.Keys) {
 	
 	#Move-Item -Path "$diff" -Destination "$html2";
 	#Move-Item -Path "$html" -Destination "$diff";
-	Write-Output "$...diff";
-	Get-ChildItem "$diff" –Recurse;
-	Write-Output "$...html";
-	Get-ChildItem "$html" –Recurse;
+	#Write-Output "$...diff";
+	#Get-ChildItem "$diff" –Recurse;
+	#Write-Output "$...html";
+	#Get-ChildItem "$html" –Recurse;
 }
