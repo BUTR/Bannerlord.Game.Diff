@@ -140,3 +140,5 @@ foreach ($key in $mappings.Keys) {
         }
     }
 }
+
+tree -H '.' --noreport --charset utf-8 -o temp/html/index.html
