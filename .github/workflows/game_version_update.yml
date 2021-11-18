@@ -1,12 +1,9 @@
 name: Workflow
 
 on:
-  push:
-    branches: [ master ]
   repository_dispatch:
-    types:
-      # If a new version of the game is released
-      - game_version_update
+    types: [game_version_update]
+  workflow_dispatch:
 
 env:
   # Disable the .NET logo in the console output.
