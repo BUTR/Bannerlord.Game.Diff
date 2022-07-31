@@ -1,0 +1,41 @@
+name: Workflow
+
+on:
+  repository_dispatch:
+    types: [game_version_update]
+  workflow_dispatch:
+
+env:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending .NET CLI telemetry to Microsoft.
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  generate:
+    name: Workflow
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - uses: addnab/docker-run-action@v3
+      with:
+        registry: gcr.io
+        image: source-diff:latest
+        options: -v ${{ github.workspace }}/html:/html -e STEAM_LOGIN=${{secrets.STEAM_LOGIN}} -e STEAM_PASSWORD=${{secrets.STEAM_PASSWORD}} -e STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}} -e BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
+      env:
+        STABLE_VERSION: ${{secrets.SYNCED_GAME_STABLE_VERSION}}
+        BETA_VERSION: ${{secrets.SYNCED_GAME_BETA_VERSION}}
+
+    #- name: Deploy to Server
+    #  uses: easingthemes/ssh-deploy@main
+    #  env:
+    #    SSH_PRIVATE_KEY: ${{secrets.KEY}}
+    #    ARGS: "-rltgoDzvO --delete"
+    #    SOURCE: "${{ github.workspace }}/html"
+    #    REMOTE_HOST: ${{secrets.HOST}}
+    #    REMOTE_USER: ${{secrets.USERNAME}}
+    #    ARGET: "/deploy/assemblydiffer/www/"
