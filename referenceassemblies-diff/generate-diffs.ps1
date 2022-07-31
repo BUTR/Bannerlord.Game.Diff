@@ -75,7 +75,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $old_folder -Force | Out-Null;
 
         Write-Output "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" | Out-Null;
+        dotnet ilspycmd "$($file.FullName)" --project --outputdir "$old_folder" | Out-Null;
     }
     Write-Output  "Generating Beta source code...";
     foreach ($file in $new_files) {
@@ -84,7 +84,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path $new_folder -Force | Out-Null;
 
         Write-Output "Generating for $fileWE...";
-        ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" | Out-Null;
+        dotnet ilspycmd "$($file.FullName)" --project --outputdir "$new_folder" | Out-Null;
     }
 
 
