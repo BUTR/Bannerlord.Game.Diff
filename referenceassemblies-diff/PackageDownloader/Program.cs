@@ -1,7 +1,5 @@
 using CommandLine;
 
-using MoreLinq.Extensions;
-
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Packaging.Core;
@@ -75,7 +73,7 @@ namespace PackageDownloader
                     var stableDict = versions
                         .Select(t => (PackageId: t.PackageId, PackageMetadata: t.PackageMetadatas
                             .Where(x => x.Identity.Version.OriginalVersion.StartsWith(o.StableVersion))
-                            .MaxBy(x => x.Identity.Version).FirstOrDefault()))
+                            .MaxBy(x => x.Identity.Version)))
                         .ToDictionary(x => x.PackageId, x => x.PackageMetadata);
 
                     foreach (var (packageId, packageMetadata) in stableDict)
@@ -99,7 +97,7 @@ namespace PackageDownloader
                     var betaDict = versions
                         .Select(t => (PackageId: t.PackageId, PackageMetadata: t.PackageMetadatas
                             .Where(x => x.Identity.Version.OriginalVersion.StartsWith(o.BetaVersion))
-                            .MaxBy(x => x.Identity.Version).FirstOrDefault()))
+                            .MaxBy(x => x.Identity.Version)))
                         .ToDictionary(x => x.PackageId, x => x.PackageMetadata);
 
                     foreach (var (packageId, packageMetadata) in betaDict)
