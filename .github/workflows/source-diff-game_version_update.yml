@@ -50,5 +50,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
+        concurrency: 20
         atomicPut: true
         rmRemote: true
