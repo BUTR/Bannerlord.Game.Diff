@@ -13,7 +13,7 @@ RUN wget https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownl
     npm install -g diff2html-cli && \
 	dotnet new tool-manifest --name local && \
     dotnet tool install dotnet-script && \
-    dotnet tool install ilspycmd --version 8.0.0.7106-preview2 &&
+    dotnet tool install ilspycmd --version 8.0.0.7106-preview2
 
 COPY . .
 
