@@ -1,4 +1,4 @@
-name: Workflow
+name: Publish ReferenceAssemblies-Diff on Game Update
 
 on:
   repository_dispatch:

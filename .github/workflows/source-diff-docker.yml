@@ -1,4 +1,4 @@
-name: Workflow
+name: Build Source-Diff Docker Image 
 
 on:
   push:
