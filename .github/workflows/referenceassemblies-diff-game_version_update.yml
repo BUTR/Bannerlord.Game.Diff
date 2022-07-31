@@ -32,7 +32,7 @@ jobs:
           BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
           TOKEN=${{secrets.GITHUB_TOKEN}}
         run: |
-          pwsh ./generate-diffs.ps1 -old_version_folder ./Stable -new_version_folder ./Beta `
+          pwsh ./generate-diffs.ps1 -old_version_folder "./Stable" -new_version_folder "./Beta" `
             -stable_version ${{secrets.SYNCED_GAME_STABLE_VERSION}} -beta_version ${{secrets.SYNCED_GAME_BETA_VERSION}} `
             -token ${{secrets.GITHUB_TOKEN}}
 
