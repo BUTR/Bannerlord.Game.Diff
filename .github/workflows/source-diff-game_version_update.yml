@@ -51,5 +51,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
         concurrency: 20
+        verbose: false
         atomicPut: true
         rmRemote: true
