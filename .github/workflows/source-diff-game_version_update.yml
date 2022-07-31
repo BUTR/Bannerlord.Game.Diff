@@ -52,4 +52,4 @@ jobs:
         source: "${{ github.workspace }}/html/"
         target: "/deploy/assemblydiffer/www/"
         rm: true
-        strip_components: 2
+        strip_components: 1
