@@ -24,7 +24,7 @@ if ([string]::IsNullOrEmpty($token)) {
 
 $stable_version=$stable_version.substring(1);
 $beta_version=$beta_version.substring(1);
-dotnet run -p referenceassemblies-diff/PackageDownloader -- -s $stable_version -b $beta_version -n Bannerlord.ReferenceAssemblies -t $PWD -f https://nuget.pkg.github.com/BUTR/index.json -u Aragas -p $token
+dotnet run --project PackageDownloader -- -s $stable_version -b $beta_version -n Bannerlord.ReferenceAssemblies -t $PWD -f https://nuget.pkg.github.com/BUTR/index.json -u Aragas -p $token
 
 Write-Output "Started...";
 $mappings = @{};
