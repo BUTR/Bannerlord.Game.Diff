@@ -22,17 +22,12 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Login to Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: BUTR
-        password: ${{ secrets.TOKEN_GPR }}
-
     - uses: addnab/docker-run-action@v3
       with:
-        registry: gcr.io
+        registry: ghcr.io
         image: source-diff:latest
+        username: BUTR
+        password: ${{ secrets.TOKEN_GPR }}
         options: -v ${{ github.workspace }}/html:/html -e STEAM_LOGIN=${{secrets.STEAM_LOGIN}} -e STEAM_PASSWORD=${{secrets.STEAM_PASSWORD}} -e STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}} -e BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
       env:
         STABLE_VERSION: ${{secrets.SYNCED_GAME_STABLE_VERSION}}
