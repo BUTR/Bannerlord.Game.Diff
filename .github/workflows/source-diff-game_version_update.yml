@@ -32,7 +32,7 @@ jobs:
       with:
         image: ghcr.io/butr/source-diff:latest
         volumes: |
-          ${{ github.workspace }}:/html
+          ${{ github.workspace }}/html:/html
         environment: |
           STEAM_LOGIN=${{secrets.STEAM_LOGIN}}
           STEAM_PASSWORD=${{secrets.STEAM_PASSWORD}}
