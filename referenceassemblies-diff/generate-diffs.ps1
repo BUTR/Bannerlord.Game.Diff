@@ -8,6 +8,19 @@ if ([string]::IsNullOrEmpty($new_version_folder)) {
     Write-Host "new_version_folder was not provided! Exiting...";
     exit;
 }
+if ([string]::IsNullOrEmpty($stable_version)) {
+    Write-Host "stable_version was not provided! Exiting...";
+    exit;
+}
+if ([string]::IsNullOrEmpty($beta_version)) {
+    Write-Host "beta_version was not provided! Exiting...";
+    exit;
+}
+if ([string]::IsNullOrEmpty($token)) {
+    Write-Host "token was not provided! Exiting...";
+    exit;
+}
+
 
 $stable_version=$stable_version.substring(1);
 $beta_version=$beta_version.substring(1);
