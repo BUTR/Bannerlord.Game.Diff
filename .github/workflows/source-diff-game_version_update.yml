@@ -24,9 +24,10 @@ jobs:
 
     - uses: addnab/docker-run-action@v3
       with:
-        image: butr/source-diff:latest
         username: BUTR
         password: ${{ secrets.TOKEN_GPR }}
+        registry: gcr.io
+        image: butr/source-diff:latest
         options: -v ${{ github.workspace }}/html:/html -e STEAM_LOGIN=${{secrets.STEAM_LOGIN}} -e STEAM_PASSWORD=${{secrets.STEAM_PASSWORD}} -e STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}} -e BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
         run: |
           echo "Executed in docker container. Test: OK!"
