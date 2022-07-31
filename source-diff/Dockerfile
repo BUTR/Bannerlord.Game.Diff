@@ -25,6 +25,8 @@ ENV PATH="/opt/bin:${PATH}"
 
 COPY . .
 
+LABEL org.opencontainers.image.source="https://github.com/BUTR/Bannerlord.Game.Diff"
+
 ENV STEAM_LOGIN=""
 ENV STEAM_PASSWORD=""
 ENV STABLE_VERSION=""
