@@ -21,15 +21,20 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Setup .NET Core
+    - name: Setup .NET 6
       uses: actions/setup-dotnet@master
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.x.x
 
-    - name: Setup .NET Core
+    - name: Setup .NET 5
       uses: actions/setup-dotnet@master
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 5.x.x
+
+    - name: Setup .NET Core 3
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: 3.x.x
 
     - name: Setup BUTR GPR
       uses: actions/setup-dotnet@master
@@ -38,9 +43,9 @@ jobs:
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
-        node-version: '14'
+        node-version: 16
 
     - name: Download latest ref packages
       run: >-
@@ -48,17 +53,17 @@ jobs:
           $stable_version=$stable_version.substring(1);
           $beta_version=$env:BETA_VERSION;
           $beta_version=$beta_version.substring(1);
-          dotnet run -p build/PackageDownloader -- `
+          dotnet run -p referenceassemblies-diff/PackageDownloader -- `
             -s $stable_version -b $beta_version -n Bannerlord.ReferenceAssemblies `
             -t $PWD `
             -f https://nuget.pkg.github.com/BUTR/index.json -u Aragas -p ${{secrets.GITHUB_TOKEN}}
-      shell: pwsh
       env:
         STABLE_VERSION: ${{secrets.SYNCED_GAME_STABLE_VERSION}}
         BETA_VERSION: ${{secrets.SYNCED_GAME_BETA_VERSION}}
+      shell: pwsh
 
     - name: Generate Diffs
-      run: ./generate-diffs.ps1 -old_version_folder "./Stable" -new_version_folder "./Beta"
+      run: ./referenceassemblies-diff/generate-diffs.ps1 -old_version_folder "./Stable" -new_version_folder "./Beta"
       shell: pwsh
 
     - name: Deploy DocFX
