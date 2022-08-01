@@ -154,5 +154,4 @@ foreach ($key in $mappings.Keys) {
     }
 }
 
-cd temp/html;
-tree ./html -H $html_path  --noreport --charset utf-8 -o ./html/index.html;
+tree ./temp/html -H $html_path  --noreport --charset utf-8 -o ./temp/html/index.html;
