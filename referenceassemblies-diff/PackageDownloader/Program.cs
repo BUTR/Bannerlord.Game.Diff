@@ -1,5 +1,7 @@
 using CommandLine;
 
+using MoreLinq.Extensions;
+
 using NuGet.Common;
 using NuGet.Configuration;
 using NuGet.Packaging.Core;
@@ -73,7 +75,7 @@ namespace PackageDownloader
                     var stableDict = versions
                         .Select(t => (PackageId: t.PackageId, PackageMetadata: t.PackageMetadatas
                             .Where(x => x.Identity.Version.OriginalVersion.StartsWith(o.StableVersion))
-                            .MaxBy(x => x.Identity.Version)))
+                            .MaxBy(x => x.Identity.Version).FirstOrDefault()))
                         .ToDictionary(x => x.PackageId, x => x.PackageMetadata);
 
                     foreach (var (packageId, packageMetadata) in stableDict)
@@ -83,7 +85,7 @@ namespace PackageDownloader
                             Console.WriteLine($"Couldn't find metadata for {packageId}! Skipping.");
                             continue;
                         }
-                        
+
                         Console.Write($"Downloading {packageId} {packageMetadata.Identity.Version}...");
                         downloadResource.GetDownloadResourceResultAsync(packageMetadata.Identity, downloadContext, Path.Combine(o.Target, "Stable"), _logger, _ct).GetAwaiter().GetResult();
                         Console.WriteLine("Done!");
@@ -97,7 +99,7 @@ namespace PackageDownloader
                     var betaDict = versions
                         .Select(t => (PackageId: t.PackageId, PackageMetadata: t.PackageMetadatas
                             .Where(x => x.Identity.Version.OriginalVersion.StartsWith(o.BetaVersion))
-                            .MaxBy(x => x.Identity.Version)))
+                            .MaxBy(x => x.Identity.Version).FirstOrDefault()))
                         .ToDictionary(x => x.PackageId, x => x.PackageMetadata);
 
                     foreach (var (packageId, packageMetadata) in betaDict)

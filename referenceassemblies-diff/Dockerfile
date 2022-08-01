@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0
+FROM mcr.microsoft.com/dotnet/sdk:5.0
 
 ARG NODE_VERSION=16
 RUN apt-get update -y && \
