@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:3.1
+FROM mcr.microsoft.com/dotnet/sdk:6.0
 
 ARG NODE_VERSION=16
 RUN apt-get update -y && \
@@ -9,7 +9,7 @@ RUN apt-get update -y && \
 
 RUN npm install -g diff2html-cli && \
 	dotnet new tool-manifest --name local && \
-    dotnet tool install ilspycmd --version 7.2.1.6856
+    dotnet tool install ilspycmd --version 8.0.0.7106-preview2
 
 COPY . .
 
