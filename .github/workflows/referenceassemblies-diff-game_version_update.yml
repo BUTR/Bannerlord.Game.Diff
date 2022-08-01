@@ -26,8 +26,8 @@ jobs:
         volumes: |
           ${{ github.workspace }}/html:/temp/html
         environment: |
-          OLD_VERSION_FOLDER="./Stable"
-          NEW_VERSION_FOLDER="./Beta"
+          OLD_VERSION_FOLDER=./Stable
+          NEW_VERSION_FOLDER=./Beta
           STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}}
           BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
           TOKEN=${{secrets.GITHUB_TOKEN}}
