@@ -43,7 +43,6 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
-        concurrency: 20
+        concurrency: 10
         verbose: false
-        atomicPut: true
         rmRemote: true
