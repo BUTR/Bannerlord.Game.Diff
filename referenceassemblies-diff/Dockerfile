@@ -20,4 +20,4 @@ ENV NEW_VERSION_FOLDER=""
 ENV STABLE_VERSION=""
 ENV BETA_VERSION=""
 ENV TOKEN=""
-CMD pwsh ./generate-diffs.ps1 -old_version_folder $OLD_VERSION_FOLDER -new_version_folder $NEW_VERSION_FOLDER -stable_version $STABLE_VERSION -beta_version $BETA_VERSION -token $TOKEN
+CMD pwsh ./generate-diffs.ps1 -old_version_folder $OLD_VERSION_FOLDER -new_version_folder $NEW_VERSION_FOLDER -stable_version $STABLE_VERSION -beta_version $BETA_VERSION -token $TOKEN -html_path $HTML_PATH

@@ -24,15 +24,16 @@ jobs:
       with:
         image: ghcr.io/butr/referenceassemblies-diff:latest
         volumes: |
-          ${{ github.workspace }}/html:/html
+          ${{ github.workspace }}/html:/temp/html
         environment: |
           OLD_VERSION_FOLDER=./Stable
           NEW_VERSION_FOLDER=./Beta
           STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}}
           BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
           TOKEN=${{secrets.GITHUB_TOKEN}}
+          HTML_PATH=.
         run: |
-          pwsh ./generate-diffs.ps1 -old_version_folder "./Stable" -new_version_folder "./Beta" -stable_version ${{secrets.SYNCED_GAME_STABLE_VERSION}} -beta_version ${{secrets.SYNCED_GAME_BETA_VERSION}} -token ${{secrets.GITHUB_TOKEN}}
+          pwsh ./generate-diffs.ps1 -old_version_folder $STABLE_VERSION -new_version_folder $NEW_VERSION_FOLDER -stable_version $STABLE_VERSION -beta_version $BETA_VERSION -token $TOKEN -html_path $HTML_PATH
 
     - name: Publish
       uses: garygrossgarten/github-action-scp@release

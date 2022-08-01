@@ -1,4 +1,4 @@
-param ($old_version_folder, $new_version_folder, $stable_version, $beta_version, $token);
+param ($old_version_folder, $new_version_folder, $stable_version, $beta_version, $token, $html_path);
 
 if ([string]::IsNullOrEmpty($old_version_folder)) {
     Write-Host "old_version_folder was not provided! Exiting...";
@@ -155,4 +155,4 @@ foreach ($key in $mappings.Keys) {
 }
 
 cd temp/html;
-tree -H './' --noreport --charset utf-8 -o ./index.html;
+tree ./html -H $html_path  --noreport --charset utf-8 -o ./html/index.html;
