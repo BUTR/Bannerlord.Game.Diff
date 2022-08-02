@@ -147,11 +147,11 @@ foreach ($key in $mappings.Keys) {
 
         Write-Output "Generating diff as $diff_file...";
         git diff --no-index "$old_folder" "$new_folder" --output "$diff_file";
-        #if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
-        #    Write-Output "Generating html as $html_file...";
-        #    diff2html -F "$html_file" -i file -- "$diff_file";
-        #}
+        if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
+            Write-Output "Generating html as $html_file...";
+            diff2html -F "$html_file" -i file -- "$diff_file";
+        }
     }
 }
 
-#tree ./temp/html -H $html_path  --noreport --charset utf-8 -o ./temp/html/index.html;
+tree ./temp/html -H $html_path  --noreport --charset utf-8 -o ./temp/html/index.html;
