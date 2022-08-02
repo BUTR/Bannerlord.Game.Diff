@@ -25,6 +25,7 @@ jobs:
         image: ghcr.io/butr/referenceassemblies-diff:latest
         volumes: |
           ${{ github.workspace }}/html:/temp/html
+          ${{ github.workspace }}/diff:/temp/diff
         environment: |
           OLD_VERSION_FOLDER=./Stable
           NEW_VERSION_FOLDER=./Beta
@@ -35,11 +36,23 @@ jobs:
         run: |
           pwsh ./generate-diffs.ps1 -old_version_folder $OLD_VERSION_FOLDER -new_version_folder $NEW_VERSION_FOLDER -stable_version $STABLE_VERSION -beta_version $BETA_VERSION -token $TOKEN -html_path $HTML_PATH
 
-    - name: Publish
+    - name: Publish Diff
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: "${{ github.workspace }}/diff/"
+        remote: "/deploy/referenceassembliesdiffer/diff/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        privateKey : ${{ secrets.KEY }}
+        concurrency: 10
+        verbose: false
+        rmRemote: true
+
+    - name: Publish Html
       uses: garygrossgarten/github-action-scp@release
       with:
         local: "${{ github.workspace }}/html/"
-        remote: "/deploy/referenceassembliesdiffer/www/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        remote: "/deploy/referenceassembliesdiffer/html/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
