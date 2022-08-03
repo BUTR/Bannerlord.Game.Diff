@@ -24,8 +24,8 @@ jobs:
       with:
         image: ghcr.io/butr/referenceassemblies-diff:latest
         volumes: |
-          ${{ github.workspace }}/html:/temp/html
-          ${{ github.workspace }}/diff:/temp/diff
+          ${{ github.workspace }}/html:/html
+          ${{ github.workspace }}/diff:/diff
         environment: |
           OLD_VERSION_FOLDER=./Stable
           NEW_VERSION_FOLDER=./Beta
