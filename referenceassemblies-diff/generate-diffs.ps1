@@ -43,8 +43,10 @@ $old  = [IO.Path]::Combine($(Get-Location), "old" );
 $new  = [IO.Path]::Combine($(Get-Location), "new" );
 $diff = [IO.Path]::Combine($(Get-Location), "diff");
 $html = [IO.Path]::Combine($(Get-Location), "html");
+$json = [IO.Path]::Combine($(Get-Location), "json");
 New-Item -ItemType directory -Path $diff -Force | Out-Null;
 New-Item -ItemType directory -Path $html -Force | Out-Null;
+New-Item -ItemType directory -Path $json -Force | Out-Null;
 
 $old_folders = Get-ChildItem -Path $old_version_folder | Sort-Object -desc;
 $new_folders = Get-ChildItem -Path $new_version_folder | Sort-Object -desc;
@@ -122,12 +124,18 @@ foreach ($key in $mappings.Keys) {
         $html_folder = [IO.Path]::Combine($html, $mapping);
         $html_file = [IO.Path]::Combine($html_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path "$html_folder" -Force | Out-Null;
+        
+        $json_folder = [IO.Path]::Combine($json, $mapping);
+        $json_file = [IO.Path]::Combine($json_folder, $fileWE + '.json');
+        New-Item -ItemType directory -Path "$json_folder" -Force | Out-Null;
 
         Write-Output "Generating diff as $diff_file...";
-        git diff --no-index --relative "$old_folder" "$new_folder" --output "$diff_file";
+        git diff --no-index -u --word-diff --relative "$old_folder" "$new_folder" --output "$diff_file";
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
             Write-Output "Generating html as $html_file...";
-            diff2html -F "$html_file" -i file -- "$diff_file";
+            diff2html -F "$html_file" -f html -i file -- "$diff_file";
+            Write-Output "Generating json as $json_file...";
+            diff2html -F "$json_file" -f json -i file -- "$diff_file";
         }
     }
     foreach ($file in $new_files) {
@@ -145,11 +153,17 @@ foreach ($key in $mappings.Keys) {
         $html_file = [IO.Path]::Combine($html_folder, $fileWE + '.html');
         New-Item -ItemType directory -Path "$html_folder" -Force | Out-Null;
 
+        $json_folder = [IO.Path]::Combine($json, $mapping);
+        $json_file = [IO.Path]::Combine($json_folder, $fileWE + '.json');
+        New-Item -ItemType directory -Path "$json_folder" -Force | Out-Null;
+
         Write-Output "Generating diff as $diff_file...";
-        git diff --no-index --relative "$old_folder" "$new_folder" --output "$diff_file";
+        git diff --no-index -u --word-diff --relative "$old_folder" "$new_folder" --output "$diff_file";
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
             Write-Output "Generating html as $html_file...";
-            diff2html -F "$html_file" -i file -- "$diff_file";
+            diff2html -F "$html_file" -f html -i file -- "$diff_file";
+            Write-Output "Generating json as $json_file...";
+            diff2html -F "$json_file" -f json -i file -- "$diff_file";
         }
     }
 }
