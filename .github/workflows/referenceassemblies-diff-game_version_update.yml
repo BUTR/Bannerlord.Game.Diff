@@ -25,6 +25,7 @@ jobs:
         image: ghcr.io/butr/referenceassemblies-diff:latest
         volumes: |
           ${{ github.workspace }}/html:/html
+          ${{ github.workspace }}/json:/json
           ${{ github.workspace }}/diff:/diff
         environment: |
           OLD_VERSION_FOLDER=./Stable
@@ -53,6 +54,18 @@ jobs:
       with:
         local: "${{ github.workspace }}/html/"
         remote: "/deploy/referenceassembliesdiffer/html/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        privateKey : ${{ secrets.KEY }}
+        concurrency: 10
+        verbose: false
+        rmRemote: true
+        
+    - name: Publish Html
+      uses: garygrossgarten/github-action-scp@release
+      with:
+        local: "${{ github.workspace }}/json/"
+        remote: "/deploy/referenceassembliesdiffer/json/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
