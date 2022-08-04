@@ -21,13 +21,6 @@ if ([string]::IsNullOrEmpty($token)) {
     exit;
 }
 
-function ReplaceAllStringsInFile($SearchString, $ReplaceString, $FullPathToFile)
-{
-    $content = [System.IO.File]::ReadAllText("$FullPathToFile").Replace("$SearchString","$ReplaceString")
-    [System.IO.File]::WriteAllText("$FullPathToFile", $content)
-}
-
-
 $stable_version=$stable_version.substring(1);
 $beta_version=$beta_version.substring(1);
 dotnet run --project PackageDownloader -- -s $stable_version -b $beta_version -n Bannerlord.ReferenceAssemblies -t $PWD -f https://nuget.pkg.github.com/BUTR/index.json -u BUTR -p $token
@@ -98,22 +91,32 @@ foreach ($key in $mappings.Keys) {
 
     # delete csproj files
     Write-Output  "Deleting csproj's..."
-    foreach ($file in $old_files) {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);    
-        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
-        Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
-        Get-ChildItem -Path $($new_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
-    }
-    foreach ($file in $new_files) {
-        $fileWE = [IO.Path]::GetFileNameWithoutExtension($file);
-        $old_folder = [IO.Path]::Combine($old, $mapping, $fileWE);
-        $new_folder = [IO.Path]::Combine($new, $mapping, $fileWE);
-        Get-ChildItem -Path $($old_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
-        Get-ChildItem -Path $($new_folder + '/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
-    }
-
-
+    Get-ChildItem -Path $($old + '/**/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
+    Get-ChildItem -Path $($new + '/**/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
+    
+    # removing usings from diff
+    Write-Output  "Removing using's..."
+    Get-ChildItem -Path $($old + '/**/*.cs') -Recurse -ErrorAction SilentlyContinue | foreach {
+        $content = [System.IO.File]::ReadAllText("$_.FullName");
+        $idx = $content.IndexOf("namespace");
+        if ($idx -ne -1) {
+            [System.IO.File]::WriteAllText(
+                "$_.FullName",
+                $content.Substring($idx);
+            );
+        }
+    };
+    Get-ChildItem -Path $($new + '/**/*.cs') -Recurse -ErrorAction SilentlyContinue | foreach {
+        $content = [System.IO.File]::ReadAllText("$_.FullName");
+        $idx = $content.IndexOf("namespace");
+        if ($idx -ne -1) {
+            [System.IO.File]::WriteAllText(
+                "$_.FullName",
+                $content.Substring($idx);
+            );
+        }
+    };
+    
     # generate the diff, md and html files
     Write-Output "Generating diff's...";
     foreach ($file in $old_files) {
