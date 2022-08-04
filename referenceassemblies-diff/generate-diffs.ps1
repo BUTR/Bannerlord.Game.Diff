@@ -90,19 +90,19 @@ foreach ($key in $mappings.Keys) {
 
 
     # delete csproj files
-    Write-Output  "Deleting csproj's..."
+    Write-Output  "Deleting csproj's...";
     Get-ChildItem -Path $($old + '/**/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
     Get-ChildItem -Path $($new + '/**/*.csproj') -Recurse -ErrorAction SilentlyContinue | foreach { Remove-Item -Path $_.FullName };
     
     # removing usings from diff
-    Write-Output  "Removing using's..."
+    Write-Output  "Removing using's...";
     Get-ChildItem -Path $($old + '/**/*.cs') -Recurse -ErrorAction SilentlyContinue | foreach {
         $content = [System.IO.File]::ReadAllText("$_.FullName");
         $idx = $content.IndexOf("namespace");
         if ($idx -ne -1) {
             [System.IO.File]::WriteAllText(
                 "$_.FullName",
-                $content.Substring($idx);
+                $content.Substring($idx)
             );
         }
     };
@@ -112,7 +112,7 @@ foreach ($key in $mappings.Keys) {
         if ($idx -ne -1) {
             [System.IO.File]::WriteAllText(
                 "$_.FullName",
-                $content.Substring($idx);
+                $content.Substring($idx)
             );
         }
     };
