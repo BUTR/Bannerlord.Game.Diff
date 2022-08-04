@@ -97,21 +97,21 @@ foreach ($key in $mappings.Keys) {
     # removing usings from diff
     Write-Output  "Removing using's...";
     Get-ChildItem -Path $($old + '/**/*.cs') -Recurse -ErrorAction SilentlyContinue | foreach {
-        $content = [System.IO.File]::ReadAllText("$_.FullName");
+        $content = [System.IO.File]::ReadAllText("$_");
         $idx = $content.IndexOf("namespace");
         if ($idx -ne -1) {
             [System.IO.File]::WriteAllText(
-                "$_.FullName",
+                "$_",
                 $content.Substring($idx)
             );
         }
     };
     Get-ChildItem -Path $($new + '/**/*.cs') -Recurse -ErrorAction SilentlyContinue | foreach {
-        $content = [System.IO.File]::ReadAllText("$_.FullName");
+        $content = [System.IO.File]::ReadAllText("$_");
         $idx = $content.IndexOf("namespace");
         if ($idx -ne -1) {
             [System.IO.File]::WriteAllText(
-                "$_.FullName",
+                "$_",
                 $content.Substring($idx)
             );
         }
