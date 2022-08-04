@@ -21,6 +21,12 @@ if ([string]::IsNullOrEmpty($token)) {
     exit;
 }
 
+function ReplaceAllStringsInFile($SearchString, $ReplaceString, $FullPathToFile)
+{
+    $content = [System.IO.File]::ReadAllText("$FullPathToFile").Replace("$SearchString","$ReplaceString")
+    [System.IO.File]::WriteAllText("$FullPathToFile", $content)
+}
+
 
 $stable_version=$stable_version.substring(1);
 $beta_version=$beta_version.substring(1);
@@ -131,6 +137,8 @@ foreach ($key in $mappings.Keys) {
 
         Write-Output "Generating diff as $diff_file...";
         git diff --no-index -u --word-diff --relative "$old_folder" "$new_folder" --output "$diff_file";
+        [System.IO.File]::WriteAllText("$diff_file", [System.IO.File]::ReadAllText("$diff_file").Replace("a/old/","").Replace("a/new/","").Replace("b/old/","").Replace("b/new/",""));
+
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
             Write-Output "Generating html as $html_file...";
             diff2html -F "$html_file" -f html -i file -- "$diff_file";
@@ -159,6 +167,8 @@ foreach ($key in $mappings.Keys) {
 
         Write-Output "Generating diff as $diff_file...";
         git diff --no-index -u --word-diff --relative "$old_folder" "$new_folder" --output "$diff_file";
+        [System.IO.File]::WriteAllText("$diff_file", [System.IO.File]::ReadAllText("$diff_file").Replace("a/old/","").Replace("a/new/","").Replace("b/old/","").Replace("b/new/",""));
+        
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
             Write-Output "Generating html as $html_file...";
             diff2html -F "$html_file" -f html -i file -- "$diff_file";
