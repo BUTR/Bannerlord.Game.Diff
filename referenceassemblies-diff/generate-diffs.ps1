@@ -139,7 +139,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path "$json_folder" -Force | Out-Null;
 
         Write-Output "Generating diff as $diff_file...";
-        git diff --no-index -u --relative "$old_folder" "$new_folder" --output "$diff_file";
+        git diff --no-index -u --relative -M30% "$old_folder" "$new_folder" --output "$diff_file";
         [System.IO.File]::WriteAllText("$diff_file", [System.IO.File]::ReadAllText("$diff_file").Replace("a/old/","").Replace("a/new/","").Replace("b/old/","").Replace("b/new/",""));
 
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
@@ -169,7 +169,7 @@ foreach ($key in $mappings.Keys) {
         New-Item -ItemType directory -Path "$json_folder" -Force | Out-Null;
 
         Write-Output "Generating diff as $diff_file...";
-        git diff --no-index -u --relative "$old_folder" "$new_folder" --output "$diff_file";
+        git diff --no-index -u --relative -M30% "$old_folder" "$new_folder" --output "$diff_file";
         [System.IO.File]::WriteAllText("$diff_file", [System.IO.File]::ReadAllText("$diff_file").Replace("a/old/","").Replace("a/new/","").Replace("b/old/","").Replace("b/new/",""));
         
         if (![string]::IsNullOrEmpty($(Get-Content $diff_file))) {
