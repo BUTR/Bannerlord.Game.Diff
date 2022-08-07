@@ -7,11 +7,11 @@ using CliWrap;
 var binDirectory = Path.Combine("bin", "Win64_Shipping_Client");
 var modulesDirectory = "Modules";
 
-var oldSrc = "old_src";
-var newSrc = "new_src";
+var oldSrc = "old";
+var newSrc = "new";
 
-var oldPath = "old";
-var newPath = "new";
+var oldPath = "old_dll";
+var newPath = "new_dll";
 
 var oldBinPath = Path.Combine(oldPath, binDirectory);
 var newBinPath = Path.Combine(newPath, binDirectory);
@@ -122,7 +122,7 @@ static async Task DecompileFile(string filter, string binPath, string referenceP
             File.Delete(csproj);
         }
 
-        foreach (var cs in Directory.GetFiles(outputPath, "*.cs"))
+        foreach (var cs in Directory.GetFiles(outputPath, "*.cs", SearchOption.AllDirectories))
         {
             var content = File.ReadAllText(cs);
             var idx = content.IndexOf("namespace", StringComparison.Ordinal);
@@ -150,8 +150,8 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
 
         Console.WriteLine($"Diffing {directory}");
         var cmd =
-            Cli.Wrap("diff")
-                .WithArguments($"-ur {oldPath} {newPath}")
+            Cli.Wrap("git")
+                .WithArguments($"diff --no-index -u --relative -M30% {oldPath} {newPath}")
                 .WithValidation(CommandResultValidation.None)
             |
             Cli.Wrap("sed")
@@ -159,7 +159,7 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
                 .WithValidation(CommandResultValidation.None)
             |
             Cli.Wrap("diff2html")
-                .WithArguments($"--no-index -u --relative -M30% -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
+                .WithArguments($"-i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
                 .WithValidation(CommandResultValidation.None);
         await cmd.ExecuteAsync();
     }
@@ -177,8 +177,8 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
 
         Console.WriteLine($"Diffing {directory}");
         var cmd =
-            Cli.Wrap("diff")
-                .WithArguments($"-ur {oldPath} {newPath}")
+            Cli.Wrap("git")
+                .WithArguments($"diff --no-index -u --relative -M30% {oldPath} {newPath}")
                 .WithValidation(CommandResultValidation.None)
             |
             Cli.Wrap("sed")
@@ -186,7 +186,7 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
                 .WithValidation(CommandResultValidation.None)
             |
             Cli.Wrap("diff2html")
-                .WithArguments($"--no-index -u --relative -M30% -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
+                .WithArguments($"-i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
                 .WithValidation(CommandResultValidation.None);
         await cmd.ExecuteAsync();
     }
