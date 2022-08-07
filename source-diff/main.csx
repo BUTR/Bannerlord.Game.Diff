@@ -182,8 +182,7 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
                 .WithValidation(CommandResultValidation.None)
             |
             Cli.Wrap("sed")
-                .WithArguments(@"-e 's/a\/old\///g' -e 's/a\/new\///g' -e 's/b\/old\///g' -e 's/b\/new\///g'")
-                .WithValidation(CommandResultValidation.None)
+                .WithArguments(@"-e s/a\/old\///g -e s/a\/new\///g -e s/b\/old\///g -e s/b\/new\///g")
             |
             Cli.Wrap("diff2html")
                 .WithArguments($"-i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
