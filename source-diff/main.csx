@@ -56,7 +56,7 @@ if (!Directory.Exists(newBinPath))
 // bin folder first
 await DecompileFile("TaleWorlds.*", oldBinPath, oldBinPath, Path.Combine(oldSrc, binDirectory), stdOut, stdErr);
 await DecompileFile("TaleWorlds.*", newBinPath, newBinPath, Path.Combine(newSrc, binDirectory), stdOut, stdErr);
-await DiffDirectories(Path.Combine(oldSrc, binDirectory), Path.Combine(newSrc, binDirectory), "html");
+await DiffDirectories(Path.Combine(oldSrc, binDirectory), Path.Combine(newSrc, binDirectory), "/html");
 
 var oldModules = Directory.GetDirectories(Path.Combine(oldPath, modulesDirectory));
 var newModules = Directory.GetDirectories(Path.Combine(newPath, modulesDirectory));
@@ -82,7 +82,7 @@ foreach (var module in oldModules)
     var oldModuleSrc = Path.Combine(oldSrc, modulesDirectory, moduleDirectoryName, binDirectory);
     var newModuleSrc = Path.Combine(newSrc, modulesDirectory, moduleDirectoryName, binDirectory);
     if (!Directory.Exists(newModuleSrc)) Directory.CreateDirectory(newModuleSrc);
-    await DiffDirectories(oldModuleSrc, newModuleSrc, Path.Combine("html", modulesDirectory, moduleDirectoryName));
+    await DiffDirectories(oldModuleSrc, newModuleSrc, Path.Combine("/html", modulesDirectory, moduleDirectoryName));
 }
 foreach (var module in newModules)
 {
@@ -90,7 +90,7 @@ foreach (var module in newModules)
     var oldModuleSrc = Path.Combine(oldSrc, modulesDirectory, moduleDirectoryName, binDirectory);
     var newModuleSrc = Path.Combine(newSrc, modulesDirectory, moduleDirectoryName, binDirectory);
     if (!Directory.Exists(oldModuleSrc)) Directory.CreateDirectory(oldModuleSrc);
-    await DiffDirectories(oldModuleSrc, newModuleSrc, Path.Combine("html", modulesDirectory, moduleDirectoryName));
+    await DiffDirectories(oldModuleSrc, newModuleSrc, Path.Combine("/html", modulesDirectory, moduleDirectoryName));
 }
 
 await Cli.Wrap("tree")
