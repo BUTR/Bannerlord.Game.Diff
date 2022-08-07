@@ -116,6 +116,19 @@ static async Task DecompileFile(string filter, string binPath, string referenceP
             .WithStandardErrorPipe(PipeTarget.ToStream(stdErr))
             .WithValidation(CommandResultValidation.None)
             .ExecuteAsync();
+
+        foreach (var csproj in Directory.GetFiles(outputPath, "*.csproj"))
+        {
+            File.Delete(csproj);
+        }
+
+        foreach (var cs in Directory.GetFiles(outputPath, "*.cs"))
+        {
+            var content = File.ReadAllText(cs);
+            var idx = content.IndexOf("namespace", StringComparison.Ordinal);
+            if (idx == -1) continue;
+            File.WriteAllText(cs, content.Substring(idx));
+        }
     }
 }
 static async Task DiffDirectories(string oldSrc, string newSrc, string outputPath)
@@ -141,8 +154,12 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
                 .WithArguments($"-ur {oldPath} {newPath}")
                 .WithValidation(CommandResultValidation.None)
             |
+            Cli.Wrap("sed")
+                .WithArguments(@"-e 's/a\/old\///g' -e 's/a\/new\///g' -e 's/b\/old\///g' -e 's/b\/new\///g'")
+                .WithValidation(CommandResultValidation.None)
+            |
             Cli.Wrap("diff2html")
-                .WithArguments($"-s side -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
+                .WithArguments($"--no-index -u --relative -M30% -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
                 .WithValidation(CommandResultValidation.None);
         await cmd.ExecuteAsync();
     }
@@ -164,8 +181,12 @@ static async Task DiffDirectories(string oldSrc, string newSrc, string outputPat
                 .WithArguments($"-ur {oldPath} {newPath}")
                 .WithValidation(CommandResultValidation.None)
             |
+            Cli.Wrap("sed")
+                .WithArguments(@"-e 's/a\/old\///g' -e 's/a\/new\///g' -e 's/b\/old\///g' -e 's/b\/new\///g'")
+                .WithValidation(CommandResultValidation.None)
+            |
             Cli.Wrap("diff2html")
-                .WithArguments($"-s side -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
+                .WithArguments($"--no-index -u --relative -M30% -i stdin -F {Path.Combine(outputPath, $"{directoryName}.html")}")
                 .WithValidation(CommandResultValidation.None);
         await cmd.ExecuteAsync();
     }
