@@ -30,8 +30,8 @@ jobs:
         environment: |
           OLD_VERSION_FOLDER=./Stable
           NEW_VERSION_FOLDER=./Beta
-          STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}}
-          BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
+          STABLE_VERSION=${{vars.GAME_VERSION_STABLE}}
+          BETA_VERSION=${{vars.GAME_VERSION_BETA}}
           TOKEN=${{secrets.GITHUB_TOKEN}}
           HTML_PATH=.
         run: |
