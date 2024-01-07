@@ -36,8 +36,8 @@ jobs:
         environment: |
           STEAM_LOGIN=${{secrets.STEAM_LOGIN}}
           STEAM_PASSWORD=${{secrets.STEAM_PASSWORD}}
-          STABLE_VERSION=${{secrets.SYNCED_GAME_STABLE_VERSION}}
-          BETA_VERSION=${{secrets.SYNCED_GAME_BETA_VERSION}}
+          STABLE_VERSION=${{vars.GAME_VERSION_STABLE}}
+          BETA_VERSION=${{vars.GAME_VERSION_BETA}}
           HTML_PATH=.
         run: |
           dotnet script ./main.csx $STABLE_VERSION $BETA_VERSION $STEAM_LOGIN $STEAM_PASSWORD $HTML_PATH
