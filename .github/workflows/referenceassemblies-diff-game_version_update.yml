@@ -41,7 +41,7 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
         local: "${{ github.workspace }}/diff/"
-        remote: "/deploy/referenceassembliesdiffer/diff/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        remote: "/deploy/referenceassembliesdiffer/diff/${{vars.GAME_VERSION_STABLE}}-${{vars.GAME_VERSION_BETA}}/"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
@@ -53,7 +53,7 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
         local: "${{ github.workspace }}/html/"
-        remote: "/deploy/referenceassembliesdiffer/html/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        remote: "/deploy/referenceassembliesdiffer/html/${{vars.GAME_VERSION_STABLE}}-${{vars.GAME_VERSION_BETA}}/"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
@@ -65,7 +65,7 @@ jobs:
       uses: garygrossgarten/github-action-scp@release
       with:
         local: "${{ github.workspace }}/json/"
-        remote: "/deploy/referenceassembliesdiffer/json/${{secrets.SYNCED_GAME_STABLE_VERSION}}-${{secrets.SYNCED_GAME_BETA_VERSION}}/"
+        remote: "/deploy/referenceassembliesdiffer/json/${{vars.GAME_VERSION_STABLE}}-${{vars.GAME_VERSION_BETA}}/"
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         privateKey : ${{ secrets.KEY }}
